@@ -1,14 +1,20 @@
 # Greed
 
-The object of Greed is to erase as much of the screen as possible by moving around in a
-grid of numbers. To move your cursor, simply use the wasdqezc keys. Your location is 
-signified by the @ symbol.
+The objective of Greed is to erase as much of the screen as possible by moving around in a
+grid of numbers. To move your cursor, simply use the wasdqezc keys (for vertical, horizontal,
+or diagonal movement). Your location is signified by the @ symbol.
 
 When you move in a direction, you erase N number of grid squares in that direction, N
-being the first number in that direction. Your score reflects the total number of squares
-eaten.
+being the first number in that direction, i.e., the number adjecent to the cursor in the
+direction in which you move. Your score reflects the total number of squares eaten.
 
 http://manpages.ubuntu.com/manpages/bionic/man6/greed.6.html
+https://gitlab.com/esr/greed
+
+Installation of default game (Debian/Ubuntu):
+```
+sudo apt install greed
+```
 
 ## Requirements:
 - numpy
