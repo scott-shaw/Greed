@@ -9,6 +9,7 @@ being the first number in that direction, i.e., the number adjecent to the curso
 direction in which you move. Your score reflects the total number of squares eaten.
 
 http://manpages.ubuntu.com/manpages/bionic/man6/greed.6.html
+
 https://gitlab.com/esr/greed
 
 Installation of default game (Debian/Ubuntu):
