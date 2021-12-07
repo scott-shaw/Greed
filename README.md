@@ -16,9 +16,16 @@ http://manpages.ubuntu.com/manpages/bionic/man6/greed.6.html
 - getch
 
 ## Usage:
+Human Ggent (controlled by user input):
 ```
 python3 main.py
+```
+Random Ggent
+```
 python3 main.py --random
+```
+Q-Learning Agent
+```
 python3 main.py --qlearn
 ```
 
