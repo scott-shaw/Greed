@@ -1,3 +1,5 @@
+# mean: 13.922 over 100,000 iterations
+
 import numpy as np
 import random
 

@@ -94,3 +94,4 @@ class Greed:
         self.printState()
         print('Available Actions: {}'.format(self.getValidActions()))
         #self.takeAction(getch.getch())
+

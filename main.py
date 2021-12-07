@@ -1,4 +1,5 @@
 # Author: Scott Shaw
+# add circular agent?
 
 import numpy as np
 from greed import *
@@ -20,6 +21,7 @@ state[init[0][0],init[1][0]] = 0
 greed_game = Greed(state, (init[0][0],init[1][0]), n)
 
 parser = argparse.ArgumentParser()
+#group = parser.add_mutually_exclusive_group()
 parser.add_argument("-r", "--random", action="store_true", help="runs greed using a random agent")
 parser.add_argument("-q", "--qlearn", action="store_true", help="runs greed using a q-learning agent")
 parser.add_argument('-i', '--iterations', nargs=1, type=int, help='number of iterations of the agent')
@@ -47,16 +49,6 @@ for i in range(loops):
             greed_game.printState()
         scores.append(greed_game.getScore())
 
-    # Play game with user input
-    else:
-        os.system('cls' if os.name == 'nt' else 'clear')
-        while(not greed_game.gameOver()):
-            greed_game.playGreed()
-            greed_game.takeAction(getch.getch())
-            os.system('cls' if os.name == 'nt' else 'clear')
-        greed_game.printState()
-
-
     state = np.random.randint(1,10, n)
     init = np.random.randint(0,10, (2, 1))
     state[init[0][0],init[1][0]] = 0
@@ -64,5 +56,15 @@ for i in range(loops):
     # Initialize game
     greed_game = Greed(state, (init[0][0],init[1][0]), n)
 
-print("=========================================")
-print("Average Score (%): {}".format(np.mean(scores)))
+if loops > 1:
+    print("=========================================")
+    print("Average Score (%): {}".format(np.mean(scores)))
+
+# Play game with user input
+if not args.random and not args.qlearn:
+    os.system('cls' if os.name == 'nt' else 'clear')
+    while(not greed_game.gameOver()):
+        greed_game.playGreed()
+        greed_game.takeAction(getch.getch())
+        os.system('cls' if os.name == 'nt' else 'clear')
+    greed_game.printState()
