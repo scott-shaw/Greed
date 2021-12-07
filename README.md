@@ -20,6 +20,9 @@ pip3 install numpy termcolor getch
 ```
 
 ## Usage:
+For help with usage:
+```python3 main.py -h```
+
 Human Agent (controlled by user input):
 ```
 python3 main.py
@@ -33,3 +36,6 @@ Q-Learning Agent
 python3 main.py --qlearn
 ```
 
+Additional Flags
+- -i ITERATIONS to run the agent ITERATIONS times
+- --no_graphics to run the game without graphics (not for human agent)

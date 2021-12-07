@@ -70,6 +70,9 @@ class Greed:
     def getScore(self):
         return np.count_nonzero(self.state==0) / (self.n[0] * self.n[1]) * 100
 
+    def printScore(self):
+        print('Score (%): {}'.format(self.getScore()))
+
     def printState(self):
         for i in range(len(self.state)):
             for j in range(len(self.state[i])):
