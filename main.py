@@ -16,6 +16,8 @@ from time import sleep
 import argparse
 import util
 from matplotlib import pyplot as plt
+import pandas as pd
+from copy import copy, deepcopy
 
 np.random.seed(250)
 
@@ -40,7 +42,7 @@ args = parser.parse_args()
 loops = args.iterations[0] if args.iterations else 1
 
 scores = []
-q_agent = QLearningAgent(greed_game, 0.9, 0.2, 0.05)
+q_agent = QLearningAgent(greed_game, 0.8, 0.1, 0.05)
 
 # Play game with random agent
 for i in range(loops):
@@ -65,25 +67,22 @@ for i in range(loops):
     # update current q value using target reward and target q-value
     elif args.qlearn:
         while(not greed_game.gameOver()):
-            pos = greed_game.getPos()
-            pos_val = util.stateEncoding(pos,n)
-            action_val = q_agent.getAction(pos_val, [util.actionEncoding(x) for x in greed_game.getValidActions(pos)])
-            action = util.actionDecoding(action_val)
+            action = q_agent.getAction(greed_game)
+            #action = util.actionDecoding(action_val)
+            old_state = deepcopy(greed_game)
 
-            #print('chosen action: {}/{}'.format(action_val, action))
             greed_game.takeAction(action)
-
-            new_valid_actions = [util.actionEncoding(x) for x in greed_game.getValidActions(greed_game.getPos())]
-            q_agent.update(pos_val, action_val, util.stateEncoding(greed_game.getNextPos(pos,action),n), greed_game.getReward(action), new_valid_actions)
+            q_agent.update(old_state, action, greed_game, greed_game.getReward(action))
    
-        #greed_game.printScore()
+        if i < 50:
+            greed_game.printScore()
         scores.append(greed_game.getScore())
 
-    state = np.random.randint(1,10, n)
-    init = np.random.randint(0,10, (2, 1))
-    state[init[0][0],init[1][0]] = 0
-    # state = state_copy
-    # init = init_copy
+    # state = np.random.randint(1,10, n)
+    # init = np.random.randint(0,10, (2, 1))
+    # state[init[0][0],init[1][0]] = 0
+    state = state_copy
+    init = init_copy
 
 
     # Initialize game
@@ -103,8 +102,6 @@ if not args.random and not args.qlearn:
     greed_game.printState()
 
 iterations = np.linspace(0, loops, loops)
-
-import pandas as pd
 
 plt.plot(scores)
 plt.plot(pd.Series(scores).rolling(50).mean())

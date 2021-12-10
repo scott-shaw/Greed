@@ -1,6 +1,7 @@
 import numpy as np
 from termcolor import cprint
 import getch
+import util
 
 # possible features:
 # surrounding values
@@ -22,6 +23,42 @@ class Greed:
     def getTotalValue(self):
         return np.sum(self.state)
 
+    # returns a list of all the adjacent values (including diagonal and zeros)
+    def getAdjacent(self, p):
+        adjacent = []
+        for i in range(-1, 2, 1):
+            for j in range(-1, 2, 1):
+                if i == 0 and j == 0:
+                    pass
+                else:    
+                    if j + p[1] >= self.n[1] or i + p[0] >= self.n[0] or j + p[1] < 0 or i + p[0] < 0: pass
+                    else: adjacent.append(self.state[tuple(map(lambda i, j: i + j, p, (i,j)))])
+        return adjacent
+
+    def getFeatures(self, a):
+        features = util.Counter()
+        features['bias'] = 1.0
+
+        next_pos = self.getNextPos(self.pos, a)
+
+        # count of each number on board 0-9
+        features['zeros'] = np.count_nonzero(self.state == 0)
+
+        # total value of board
+        features['total'] = self.getTotalValue()/10000
+
+        # sum of surrounding values
+        features['adjacent'] = np.sum(self.getAdjacent(next_pos))
+
+        # highest value move from current position
+        features['highest'] = np.max(self.getAdjacent(next_pos))
+
+        features['actions'] = len(self.getValidActions(next_pos))
+
+        features.divideAll(10.0)
+        return features
+
+
     # p: position
     # a: action
     def getNextPos(self, p, a):
@@ -32,7 +69,7 @@ class Greed:
 
         return (self.pos[0]+(x*val), self.pos[1]+(y*val))
 
-    # number of tiles removed + number of actions at next state
+    # look two moves in advance and return number of actions at each position
     def getReward(self, a):
         if a not in self.getValidActions(self.pos): return 0
 
@@ -45,11 +82,11 @@ class Greed:
             acts_at_next_next.append(len(self.getValidActions(next_next_pos)))
 
         if len(acts_at_next) == 0 or np.sum(acts_at_next_next) == 0:
-            return -50
+            return -1
         # elif len(acts_at_next) + np.sum(acts_at_next_next) < 10:
         #     return -10
         else:
-            return len(acts_at_next) + np.sum(acts_at_next_next)
+            return (len(acts_at_next) + np.sum(acts_at_next_next)) / 50
 
     # v: x or y position
     # axis: the axis on which v lies -> 0 for x, 1 for y
