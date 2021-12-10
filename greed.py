@@ -42,19 +42,21 @@ class Greed:
         next_pos = self.getNextPos(self.pos, a)
 
         # count of each number on board 0-9
-        features['zeros'] = np.count_nonzero(self.state == 0)
+        features['zeros'] = np.count_nonzero(self.state == 0)/20
 
         # total value of board
-        features['total'] = self.getTotalValue()/10000
+        #features['total'] = self.getTotalValue()/1000
+        
+        features['score'] = self.getScore()
 
         # sum of surrounding values
-        features['adjacent'] = np.sum(self.getAdjacent(next_pos))
+        features['adjacent'] = np.sum(self.getAdjacent(next_pos))/5
 
         # highest value move from current position
         features['highest'] = np.max(self.getAdjacent(next_pos))
 
         features['actions'] = len(self.getValidActions(next_pos))
-
+       
         features.divideAll(10.0)
         return features
 
@@ -70,8 +72,14 @@ class Greed:
         return (self.pos[0]+(x*val), self.pos[1]+(y*val))
 
     # look two moves in advance and return number of actions at each position
+    # distance from center
+    # somthing with moving around in circular motion?
     def getReward(self, a):
         if a not in self.getValidActions(self.pos): return 0
+
+        x, y = self.actions[a]
+        pos = (self.pos[0]+x, self.pos[1]+y)
+        val = self.state[(self.pos[0]+x, self.pos[1]+y)]
 
         next_pos = self.getNextPos(self.pos, a)
         acts_at_next = self.getValidActions(next_pos)
@@ -81,12 +89,12 @@ class Greed:
             next_next_pos = self.getNextPos(next_pos, act)
             acts_at_next_next.append(len(self.getValidActions(next_next_pos)))
 
-        if len(acts_at_next) == 0 or np.sum(acts_at_next_next) == 0:
-            return -1
-        # elif len(acts_at_next) + np.sum(acts_at_next_next) < 10:
+        return (len(acts_at_next) + np.sum(acts_at_next_next)) * 0.1 + val
+        # if len(acts_at_next) <= 1 or np.sum(acts_at_next_next) <= 1:
         #     return -10
-        else:
-            return (len(acts_at_next) + np.sum(acts_at_next_next)) / 50
+   
+        # else:
+        #     return (len(acts_at_next) + np.sum(acts_at_next_next)) * 0.1 + val
 
     # v: x or y position
     # axis: the axis on which v lies -> 0 for x, 1 for y

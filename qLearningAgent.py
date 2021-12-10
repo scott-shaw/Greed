@@ -1,9 +1,8 @@
 import numpy as np
 import util
-import random
 from greed import *
 
-np.random.seed(250)
+np.random.seed(225)
 
 class QLearningAgent:
     
@@ -31,7 +30,7 @@ class QLearningAgent:
 
     def getAction(self, state):
         validActions = state.getValidActions(state.getPos())
-        return random.choice(validActions) if util.flipCoin(self.epsilon) else self.getPolicy(state)
+        return np.random.choice(validActions) if util.flipCoin(self.epsilon) else self.getPolicy(state)
 
     def update(self, state, action, nextState, reward):
         d = (reward + self.discount * self.getValue(nextState)) - self.getQValue(state, action)
