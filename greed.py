@@ -23,6 +23,10 @@ class Greed:
     def getTotalValue(self):
         return np.sum(self.state)
 
+    def distance_from_center(self):
+        center = np.array(self.n) / 2
+        return util.distance(center, self.pos)
+
     # returns a list of all the adjacent values (including diagonal and zeros)
     def getAdjacent(self, p):
         adjacent = []
@@ -42,7 +46,7 @@ class Greed:
         next_pos = self.getNextPos(self.pos, a)
 
         # count of each number on board 0-9
-        features['zeros'] = np.count_nonzero(self.state == 0)/20
+        #features['zeros'] = np.count_nonzero(self.state == 0)/20
 
         # total value of board
         #features['total'] = self.getTotalValue()/1000
@@ -72,7 +76,7 @@ class Greed:
         return (self.pos[0]+(x*val), self.pos[1]+(y*val))
 
     # look two moves in advance and return number of actions at each position
-    # distance from center
+    # distance from outside -> close = high reward
     # somthing with moving around in circular motion?
     def getReward(self, a):
         if a not in self.getValidActions(self.pos): return 0
@@ -89,12 +93,12 @@ class Greed:
             next_next_pos = self.getNextPos(next_pos, act)
             acts_at_next_next.append(len(self.getValidActions(next_next_pos)))
 
-        return (len(acts_at_next) + np.sum(acts_at_next_next)) * 0.1 + val
-        # if len(acts_at_next) <= 1 or np.sum(acts_at_next_next) <= 1:
-        #     return -10
+        #return (len(acts_at_next) + np.sum(acts_at_next_next)) * 0.1 + val
+        if len(acts_at_next) <= 1 or np.sum(acts_at_next_next) <= 1:
+            return -50
    
-        # else:
-        #     return (len(acts_at_next) + np.sum(acts_at_next_next)) * 0.1 + val
+        else:
+            return (len(acts_at_next) + np.sum(acts_at_next_next))
 
     # v: x or y position
     # axis: the axis on which v lies -> 0 for x, 1 for y

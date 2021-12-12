@@ -39,7 +39,7 @@ args = parser.parse_args()
 loops = args.iterations[0] if args.iterations else 1
 
 scores = []
-q_agent = QLearningAgent(greed_game, 0.95, 0.1, 0.1)
+q_agent = QLearningAgent(greed_game, 0.9, 0.15, 0.01)
 
 # Play game with random agent
 for i in range(loops):
