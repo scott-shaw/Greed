@@ -38,6 +38,10 @@ Random Agent
 ```
 python3 main.py --random
 ```
+Circular Agent
+```
+python3 main.py --circular
+```
 Q-Learning Agent
 ```
 python3 main.py --qlearn
@@ -46,3 +50,7 @@ python3 main.py --qlearn
 Additional Flags
 - -i ITERATIONS to run the agent ITERATIONS times
 - --no_graphics to run the game without graphics
+Example (1k episodes of q-learning):
+```
+python3 main.py --qlearn --no_graphics -i 1000
+```
