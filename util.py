@@ -8,20 +8,6 @@ def decay(d, x, initial, min):
 def distance(p1, p2):
     return math.sqrt((p2[0]-p1[0])**2 + (p2[1]-p1[1])**2)
 
-# states encoding
-# x = 0 -> 0-39
-# x = 1 -> 40-79
-# .
-# .
-# .
-# # x = 20 -> 760-799
-# 20,40
-def posEncoding(pos, n):
-    layer_size = n[1]
-    layer = (pos[0]-1) * layer_size
-    position = layer + pos[1]
-    return position-1
-
 def flipCoin(p):
     r = np.random.uniform()
     return r < p
