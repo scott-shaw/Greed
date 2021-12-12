@@ -2,8 +2,8 @@ import numpy as np
 import math
 np.random.seed(225)
 
-def decay(d, x):
-    return math.e**(-d*x)
+def decay(d, x, initial, min):
+    return max(initial*math.e**(-d*x), min)
 
 def distance(p1, p2):
     return math.sqrt((p2[0]-p1[0])**2 + (p2[1]-p1[1])**2)

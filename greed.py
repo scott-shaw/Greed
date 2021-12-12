@@ -3,10 +3,6 @@ from termcolor import cprint
 import getch
 import util
 
-# possible features:
-# surrounding values
-# count of each number on board 0-9
-
 class Greed:
     def __init__(self,s,pos,n):
         self.state = s
@@ -88,7 +84,7 @@ class Greed:
         next_pos = self.getNextPos(self.pos, a)
         if len(self.getValidActions(next_pos)) <= 1:
             return -10
-        return (self.distance_from_center() * 2 + self.getActionValue(a) + len(self.getValidActions(next_pos))) / 10
+        return (self.distance_from_center() * 2 + self.getActionValue(a) + len(self.getValidActions(next_pos))) / 4
         # if a not in self.getValidActions(self.pos): return 0
 
         # x, y = self.actions[a]

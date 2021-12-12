@@ -15,6 +15,9 @@ class QLearningAgent:
     def setEpsilon(self, e):
         self.epsilon = e
 
+    def setLearningRate(self, a):
+        self.alpha = a
+
     def getWeights(self):
         return self.weights
 

@@ -1,6 +1,6 @@
 # Author: Scott Shaw
-# add circular agent?
 # IMPROVE REWARD FUNC
+# add multi-threading
 
 import numpy as np
 from greed import *
@@ -39,8 +39,10 @@ args = parser.parse_args()
 loops = args.iterations[0] if args.iterations else 1
 
 scores = []
-q_agent = QLearningAgent(greed_game, 0.9, 0.05, 1)
-decay = 0.01
+q_agent = QLearningAgent(greed_game, 0.999, 0.005, 1)
+epsilon_decay = 0.005
+epsilon_initial = 0.6
+epsilon_min_bound = 0.01
 # Play game with random agent
 for i in range(loops):
     if args.random:
@@ -49,12 +51,14 @@ for i in range(loops):
             if args.no_graphics:
                 rand_agent.takeAction()
             else:
+                sleep(0.5)
                 greed_game.playGreed()
                 rand_agent.takeAction()
                 
         if args.no_graphics:
             greed_game.printScore()
         else:
+            sleep(0.5)
             greed_game.printState()
         scores.append(greed_game.getScore())
 
@@ -64,6 +68,7 @@ for i in range(loops):
             if args.no_graphics:
                 rand_agent.takeAction()
             else:
+                sleep(0.5)
                 greed_game.playGreed()
                 rand_agent.takeAction()
 
@@ -79,18 +84,24 @@ for i in range(loops):
     # take action
     # update current q value using target reward and target q-value
     elif args.qlearn:
-        q_agent.setEpsilon(util.decay(decay, i))
+        q_agent.setEpsilon(util.decay(epsilon_decay, i, epsilon_initial, epsilon_min_bound))
+        #q_agent.setLearningRate(util.decay(decay, i))
         while(not greed_game.gameOver()):
             action = q_agent.getAction(greed_game)
             old_state = deepcopy(greed_game)
-
-            greed_game.takeAction(action)
+            if args.no_graphics:
+                greed_game.takeAction(action)
+            else:
+                sleep(0.5)
+                greed_game.playGreed()
+                greed_game.takeAction(action)
             q_agent.update(old_state, action, greed_game, greed_game.getReward(action))
-            #print(i)
-            
-            # sleep(0.5)
-            # greed_game.printState()
-        greed_game.printScore()
+        
+        if args.no_graphics:    
+            greed_game.printScore()
+        else:
+            sleep(0.5)
+            greed_game.printState()
         scores.append(greed_game.getScore())
 
     # state = np.random.randint(1,10, n)
