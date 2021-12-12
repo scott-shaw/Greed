@@ -39,8 +39,8 @@ args = parser.parse_args()
 loops = args.iterations[0] if args.iterations else 1
 
 scores = []
-q_agent = QLearningAgent(greed_game, 0.9, 0.15, 0.01)
-
+q_agent = QLearningAgent(greed_game, 0.9, 0.05, 1)
+decay = 0.01
 # Play game with random agent
 for i in range(loops):
     if args.random:
@@ -79,6 +79,7 @@ for i in range(loops):
     # take action
     # update current q value using target reward and target q-value
     elif args.qlearn:
+        q_agent.setEpsilon(util.decay(decay, i))
         while(not greed_game.gameOver()):
             action = q_agent.getAction(greed_game)
             old_state = deepcopy(greed_game)

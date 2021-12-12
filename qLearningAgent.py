@@ -12,6 +12,9 @@ class QLearningAgent:
         self.epsilon = epsilon
         self.weights = util.Counter()
     
+    def setEpsilon(self, e):
+        self.epsilon = e
+
     def getWeights(self):
         return self.weights
 

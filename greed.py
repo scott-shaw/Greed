@@ -27,6 +27,11 @@ class Greed:
         center = np.array(self.n) / 2
         return util.distance(center, self.pos)
 
+    def getActionValue(self, a):
+        if a not in self.getValidActions(self.pos): return 0
+        x, y = self.actions[a]
+        return self.state[(self.pos[0]+x, self.pos[1]+y)]
+
     # returns a list of all the adjacent values (including diagonal and zeros)
     def getAdjacent(self, p):
         adjacent = []
@@ -80,25 +85,30 @@ class Greed:
     # somthing with moving around in circular motion?
     def getReward(self, a):
         if a not in self.getValidActions(self.pos): return 0
-
-        x, y = self.actions[a]
-        pos = (self.pos[0]+x, self.pos[1]+y)
-        val = self.state[(self.pos[0]+x, self.pos[1]+y)]
-
         next_pos = self.getNextPos(self.pos, a)
-        acts_at_next = self.getValidActions(next_pos)
+        if len(self.getValidActions(next_pos)) <= 1:
+            return -10
+        return (self.distance_from_center() * 2 + self.getActionValue(a) + len(self.getValidActions(next_pos))) / 10
+        # if a not in self.getValidActions(self.pos): return 0
 
-        acts_at_next_next = []
-        for act in acts_at_next:
-            next_next_pos = self.getNextPos(next_pos, act)
-            acts_at_next_next.append(len(self.getValidActions(next_next_pos)))
+        # x, y = self.actions[a]
+        # pos = (self.pos[0]+x, self.pos[1]+y)
+        # val = self.state[(self.pos[0]+x, self.pos[1]+y)]
+
+        # next_pos = self.getNextPos(self.pos, a)
+        # acts_at_next = self.getValidActions(next_pos)
+
+        # acts_at_next_next = []
+        # for act in acts_at_next:
+        #     next_next_pos = self.getNextPos(next_pos, act)
+        #     acts_at_next_next.append(len(self.getValidActions(next_next_pos)))
 
         #return (len(acts_at_next) + np.sum(acts_at_next_next)) * 0.1 + val
-        if len(acts_at_next) <= 1 or np.sum(acts_at_next_next) <= 1:
-            return -50
+        # if len(acts_at_next) <= 1 or np.sum(acts_at_next_next) <= 1:
+        #     return -50
    
-        else:
-            return (len(acts_at_next) + np.sum(acts_at_next_next))
+        # else:
+        #     return (len(acts_at_next) + np.sum(acts_at_next_next))
 
     # v: x or y position
     # axis: the axis on which v lies -> 0 for x, 1 for y
