@@ -28,6 +28,14 @@ class Greed:
         x, y = self.actions[a]
         return self.state[(self.pos[0]+x, self.pos[1]+y)]
 
+    # def getStateCenterOfMass(self):
+    #     non_zero_position = []
+    #     for i in range(self.n[0]):
+    #         for j in range(self.n[1]):
+    #             if self.state[(i, j)] > 0:
+    #                 non_zero_position.append([i,j])
+    #     return np.mean(non_zero_position)
+
     # returns a list of all the adjacent values (including diagonal and zeros)
     def getAdjacent(self, p):
         adjacent = []
@@ -46,12 +54,6 @@ class Greed:
 
         next_pos = self.getNextPos(self.pos, a)
 
-        # count of each number on board 0-9
-        #features['zeros'] = np.count_nonzero(self.state == 0)/20
-
-        # total value of board
-        #features['total'] = self.getTotalValue()/1000
-        
         features['score'] = self.getScore()
 
         # sum of surrounding values
@@ -65,7 +67,6 @@ class Greed:
         features.divideAll(10.0)
         return features
 
-
     # p: position
     # a: action
     def getNextPos(self, p, a):
@@ -76,35 +77,12 @@ class Greed:
 
         return (self.pos[0]+(x*val), self.pos[1]+(y*val))
 
-    # look two moves in advance and return number of actions at each position
-    # distance from outside -> close = high reward
-    # somthing with moving around in circular motion?
     def getReward(self, a):
         if a not in self.getValidActions(self.pos): return 0
         next_pos = self.getNextPos(self.pos, a)
         if len(self.getValidActions(next_pos)) <= 1:
             return -10
         return (self.distance_from_center(next_pos) * 2 + len(self.getValidActions(next_pos))) / 3
-        # if a not in self.getValidActions(self.pos): return 0
-
-        # x, y = self.actions[a]
-        # pos = (self.pos[0]+x, self.pos[1]+y)
-        # val = self.state[(self.pos[0]+x, self.pos[1]+y)]
-
-        # next_pos = self.getNextPos(self.pos, a)
-        # acts_at_next = self.getValidActions(next_pos)
-
-        # acts_at_next_next = []
-        # for act in acts_at_next:
-        #     next_next_pos = self.getNextPos(next_pos, act)
-        #     acts_at_next_next.append(len(self.getValidActions(next_next_pos)))
-
-        #return (len(acts_at_next) + np.sum(acts_at_next_next)) * 0.1 + val
-        # if len(acts_at_next) <= 1 or np.sum(acts_at_next_next) <= 1:
-        #     return -50
-   
-        # else:
-        #     return (len(acts_at_next) + np.sum(acts_at_next_next))
 
     # v: x or y position
     # axis: the axis on which v lies -> 0 for x, 1 for y

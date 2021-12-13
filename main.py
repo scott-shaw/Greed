@@ -125,6 +125,7 @@ if not args.random and not args.qlearn and not args.circular:
     os.system('cls' if os.name == 'nt' else 'clear')
     while(not greed_game.gameOver()):
         greed_game.playGreed()
+        print(greed_game.getStateCenterOfMass())
         greed_game.takeAction(getch.getch())
         os.system('cls' if os.name == 'nt' else 'clear')
     greed_game.printState()
