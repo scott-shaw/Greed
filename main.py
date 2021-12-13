@@ -41,8 +41,8 @@ loops = args.iterations[0] if args.iterations else 1
 scores = []
 # discount = 0.999
 # alpha = 0.0005
-q_agent = QLearningAgent(greed_game, 0.95, 0.0001, 1)
-epsilon_decay = 0.0005 # 0.001
+q_agent = QLearningAgent(greed_game, 0.9, 0.00001, 1)
+epsilon_decay = 0.0001 # 0.001
 epsilon_initial = 0.5 # 0.5
 epsilon_min_bound = 0.01 # 0.01
 # Play game with random agent
