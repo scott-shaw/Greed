@@ -19,9 +19,9 @@ class Greed:
     def getTotalValue(self):
         return np.sum(self.state)
 
-    def distance_from_center(self):
+    def distance_from_center(self, p):
         center = np.array(self.n) / 2
-        return util.distance(center, self.pos)
+        return util.distance(center, p)
 
     def getActionValue(self, a):
         if a not in self.getValidActions(self.pos): return 0
@@ -84,7 +84,7 @@ class Greed:
         next_pos = self.getNextPos(self.pos, a)
         if len(self.getValidActions(next_pos)) <= 1:
             return -10
-        return (self.distance_from_center() * 2 + self.getActionValue(a) + len(self.getValidActions(next_pos))) / 4
+        return (self.distance_from_center(next_pos) * 2 + len(self.getValidActions(next_pos))) / 3
         # if a not in self.getValidActions(self.pos): return 0
 
         # x, y = self.actions[a]
